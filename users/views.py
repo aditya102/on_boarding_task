@@ -8,14 +8,16 @@ def register(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('users/home.html')
+            return redirect('/users/home')
     else:
         form = UserCreationForm()
     form = UserCreationForm()
     return render(request, 'users/register.html', {'form': form})
 
+
 def home(request):
     return render(request, 'users/home.html')
+
 
 def logut(request):
     logout(request)
