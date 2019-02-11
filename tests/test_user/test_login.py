@@ -44,29 +44,19 @@ class AccountsTestCase(TestCase):
         response = self.client.post(
             reverse('login'), {'username': 'adafafaf', 'password': 'wrong@passowrd'})
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context['form'].errors, {'__all__': [
-                         'Please enter a correct username and password. Note that both fields may be case-sensitive.']})
-        response = self.client.post(
-            reverse('login'), {'username': 'demo_user', 'password': '1sfsdf'})
+        self.assertEqual(response.context['form'].errors, {'__all__': ['Please enter a correct username and password. Note that both fields may be case-sensitive.']})
+        response = self.client.post(reverse('login'), {'username': 'demo_user', 'password': '1sfsdf'})
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context['form'].errors, {'__all__': [
-                         'Please enter a correct username and password. Note that both fields may be case-sensitive.']})
-        response = self.client.post(
-            reverse('login'), {'username': 'xyzabe', 'password': 'demo@123'})
+        self.assertEqual(response.context['form'].errors, {'__all__': ['Please enter a correct username and password. Note that both fields may be case-sensitive.']})
+        response = self.client.post(reverse('login'), {'username': 'xyzabe', 'password': 'demo@123'})
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context['form'].errors, {'__all__': [
-                         'Please enter a correct username and password. Note that both fields may be case-sensitive.']})
-        response = self.client.post(
-            reverse('login'), {'username': '', 'password': ''})
+        self.assertEqual(response.context['form'].errors, {'__all__': ['Please enter a correct username and password. Note that both fields may be case-sensitive.']})
+        response = self.client.post(reverse('login'), {'username': '', 'password': ''})
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context['form'].errors, {'username': [
-                         'This field is required.'], 'password': ['This field is required.']})
+        self.assertEqual(response.context['form'].errors, {'username': ['This field is required.'], 'password': ['This field is required.']})
         AccountsTestCase.change_password()
-        response = self.client.post(
-            reverse('login'), {'username': 'demo_user', 'password': '@new_demo_password'})
+        response = self.client.post(reverse('login'), {'username': 'demo_user', 'password': '@new_demo_password'})
         self.assertEqual(response.status_code, 200)
-        response = self.client.post(
-            reverse('login'), {'username': 'demo_user', 'password': 'demo@123'})
+        response = self.client.post(reverse('login'), {'username': 'demo_user', 'password': 'demo@123'})
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context['form'].errors, {'__all__': [
-                         'Please enter a correct username and password. Note that both fields may be case-sensitive.']})
+        self.assertEqual(response.context['form'].errors, {'__all__': ['Please enter a correct username and password. Note that both fields may be case-sensitive.']})
