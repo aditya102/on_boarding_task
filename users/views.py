@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import logout
+from django.contrib.auth.forms import UserCreationForm
+from django.shortcuts import redirect, render
 
 
 def register(request):
@@ -11,7 +11,6 @@ def register(request):
             return redirect('/users/home')
     else:
         form = UserCreationForm()
-    form = UserCreationForm()
     return render(request, 'users/register.html', {'form': form})
 
 
