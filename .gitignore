@@ -3,7 +3,6 @@
 # Edit at https://www.gitignore.io/?templates=pycharm,python,django
 
 .vscode
-setup.cfg
 
 ### Django ###
 *.log
