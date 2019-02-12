@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['testserver', 'localhost']
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 
 # Application definition
 
