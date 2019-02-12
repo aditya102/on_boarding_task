@@ -6,6 +6,7 @@ ERROR_MSG = 'Please enter a correct username and password. Note that both fields
 
 
 class AccountsTestCase(TestCase):
+
     def setUp(self):
         self.user = User.objects.create_user(username='demo_user', password='demo@123')
 
@@ -28,7 +29,7 @@ class AccountsTestCase(TestCase):
         self.assertContains(response, ' <input type="text" name="username"')
         self.assertContains(response, '<input type="password" name="password"')
         self.assertContains(response, '<button class="btn btn-outline-info" type="submit">')
-
+        
     def test_post_login_page(self):
         """
         Check login page is redirected to home page or not .
