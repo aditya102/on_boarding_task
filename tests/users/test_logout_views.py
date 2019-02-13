@@ -10,4 +10,4 @@ class AccountsTestCase(TestCase):
     def test_logout(self):
         self.client.login(username=self.user.username, password='demo@123')
         response = self.client.get(reverse('logout'), follow=True)
-        self.assertRedirects(response, '/users/login/')
+        self.assertRedirects(response, reverse('login'))
