@@ -1,14 +1,16 @@
 <html>
-<header><title>Home</title></header>
-<body>
-    {% if user.is_authenticated %}
+  <header>
+    <title>Home</title>
+  </header>
+    <body>
+      {% if user.is_authenticated %}
         <p>Hello ,{{ user.username }}</p>
-        <p>You are now log in<p>
+        <p>You are now log in</p>
         <p><a href="{% url 'logout' %}">logout</a></p>
-    {% else %}
-        <p>Account Created Succesfully</p>
+      {% else %}
+        <p>Account Created Successfully </p>
         <p>Now you can log in</p>
         <p><a href="{% url 'login' %}">LogIn</a></p>
-    {% endif %}
-</body>
+      {% endif %}
+   </body>
 </html>

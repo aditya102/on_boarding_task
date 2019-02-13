@@ -9,14 +9,12 @@ class AccountsTestCase(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='demo_user', password='demo@123')
 
-    @staticmethod
-    def change_password():
+    def change_password(self):
         """
         Helper method for changing password.
         """
-        new_user = User.objects.get(username='demo_user')
-        new_user.set_password('@new_demo_passowrd')
-        new_user.save()
+        self.user.set_password('@new_demo_passowrd')
+        self.user.save()
 
     def test_login_page_elements(self):
         """
@@ -28,12 +26,14 @@ class AccountsTestCase(TestCase):
         self.assertContains(response, ' <input type="text" name="username"')
         self.assertContains(response, '<input type="password" name="password"')
         self.assertContains(response, '<button class="btn btn-outline-info" type="submit">')
-        
+
     def test_post_login_page(self):
         """
         Check login page is redirected to home page or not .
         """
-        response = self.client.post(reverse('login'), {'username': self.user.username, 'password': 'demo@123'}, follow=True)
+        response = self.client.post(
+            reverse('login'), {'username': self.user.username, 'password': 'demo@123'}, follow=True
+        )
         self.assertRedirects(response, reverse('home'))
 
     def test_invalid_username_invalid_password(self):
@@ -73,15 +73,17 @@ class AccountsTestCase(TestCase):
         """
         Check for changin password users should be able to login
         """
-        AccountsTestCase.change_password()
-        response = self.client.post(reverse('login'), {'username': self.user.username, 'password': '@new_demo_password'})
+        self.change_password()
+        response = self.client.post(
+            reverse('login'), {'username': self.user.username, 'password': '@new_demo_password'}
+        )
         self.assertEqual(response.status_code, 200)
 
     def test_old_password_login_check(self):
         """
         Check for users should not be able to login from old password
         """
-        AccountsTestCase.change_password()
+        self.change_password()
         response = self.client.post(reverse('login'), {'username': 'self.user.username', 'password': 'demo@123'})
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'form', None, ERROR_MSG)
