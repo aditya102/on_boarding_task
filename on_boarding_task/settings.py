@@ -25,9 +25,7 @@ SECRET_KEY = 'i&!g*w+trwdp+h$k6*ty6)bi$p%(70*yri9c0rrc223s#kqn7%'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['testserver', 'localhost']
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -129,3 +127,11 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = '/users/home'
 
 LOGOUT_REDIRECT_URL = '/users/login'
+
+# smtp host
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'imap.gmail.com'
+EMAIL_HOST_USER = 'xda.aditya@gmail.com'
+EMAIL_HOST_PASSWORD = 'aditya@gmailtcs'
+EMAIL_PORT = 587

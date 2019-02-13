@@ -11,3 +11,11 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', )
+
+
+class ForgotPassword(forms.Form):
+    email = forms.CharField(max_length=30, required=True, help_text="Enter your email")
+
+    class Meta:
+        model = User
+        fields = ('email')
