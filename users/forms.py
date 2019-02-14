@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 from django.contrib.auth.models import User
 
 
@@ -10,12 +10,14 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', )
+        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2',)
 
 
-class ForgotPassword(forms.Form):
-    email = forms.CharField(max_length=30, required=True, help_text="Enter your email")
-
-    class Meta:
-        model = User
-        fields = ('email')
+class CustomPasswordReset(PasswordResetForm):
+    def clean(self):
+        email = self.cleaned_data.get("email")
+        try:
+            User.objects.get(email=email)
+        except User.DoesNotExist:
+            self.add_error('email', "No Account with this email Address")
+        return super(CustomPasswordReset, self).clean()
