@@ -19,5 +19,5 @@ class CustomPasswordReset(PasswordResetForm):
         try:
             User.objects.get(email=email)
         except User.DoesNotExist:
-            self.add_error('email', "No Account with this email Address"    )
+            self.add_error('email', "No Account with this email Address")
         return super(CustomPasswordReset, self).clean()

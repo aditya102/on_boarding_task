@@ -8,6 +8,9 @@ class AccountsTestCase(TestCase):
         self.user = User.objects.create_user(username='demo_user', password='demo@123')
 
     def test_logout(self):
+        """
+        Check after logout page is redirects or not
+        """
         self.client.login(username=self.user.username, password='demo@123')
         response = self.client.get(reverse('logout'), follow=True)
         self.assertRedirects(response, reverse('login'))
