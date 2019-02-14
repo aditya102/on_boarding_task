@@ -34,7 +34,14 @@ class AccountsTestCase(TestCase):
         """
         Test tha password and confirm password field have same data or not.
         """
-        response = self.client.post(reverse('register'), {'username': 'testuser124', 'first_name': 'test', 'last_name': 'demo', 'email': 'testuser@gmail.com', 'password1': '1234adityaisbest11212', 'password2': '1234adityaisbest'})
+        response = self.client.post(reverse('register'), {
+            'username': 'testuser124',
+            'first_name': 'test',
+            'last_name': 'demo',
+            'email': 'testuser@gmail.com',
+            'password1': '1234adityaisbest11212',
+            'password2': '1234adityaisbest'
+        })
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'form', 'password2', "The two password fields didn't match.")
 
@@ -49,7 +56,12 @@ class AccountsTestCase(TestCase):
         """
         Test that account with that username is already present or not.
         """
-        user = User.objects.create_user(username='testuser124', first_name='test', email="testuser@gmail.com", password="aditya")
+        user = User.objects.create_user(
+            username='testuser124',
+            first_name='test',
+            email="testuser@gmail.com",
+            password="aditya"
+        )
         form1 = SignUpForm(data=self.user_data)
         self.assertEqual(False, form1.is_valid())
 
@@ -57,14 +69,26 @@ class AccountsTestCase(TestCase):
         """
         check that username contains anything other than lowercase alphabates or digit
         """
-        form = SignUpForm({'username': 't@#@ser124', 'first_name': 'test', 'last_name': 'demo', 'email': 'testuser@gmail.com', 'password': '1234adityaisbest'})
+        form = SignUpForm(
+            {'username': 't@#@ser124',
+             'first_name': 'test',
+             'last_name': 'demo',
+             'email': 'testuser@gmail.com',
+             'password': '1234adityaisbest'}
+        )
         self.assertTrue(form.has_error('username'))
 
     def test_email_is_valid_or_not(self):
         """
-        Checks that email is valid or not.It should not contains any special character or spaces. 
+        Checks that email is valid or not.It should not contains any special character or spaces.
         """
-        form = SignUpForm({'username': 'testuser23', 'first_name': 'test', 'last_name': 'demo', 'email': 'tes-!@$4tuser@gmail.com', 'password': '1234adityaisbest'})
+        form = SignUpForm(
+            {'username': 'testuser23',
+             'first_name': 'test',
+             'last_name': 'demo',
+             'email': 'tes-!@$4tuser@gmail.com',
+             'password': '1234adityaisbest'}
+        )
         self.assertTrue(form.has_error('email'))
 
     def test_for_valid_email_address_reset(self):
