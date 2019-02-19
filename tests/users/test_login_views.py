@@ -5,7 +5,7 @@ from django.urls import reverse
 ERROR_MSG = 'Please enter a correct username and password. Note that both fields may be case-sensitive.'
 
 
-class AccountsTestCase(TestCase):
+class LoginView (TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='demo_user', password='demo@123')
 

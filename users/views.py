@@ -1,13 +1,12 @@
+from django.contrib.auth import login, logout
+from django.contrib.auth.models import User
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import EmailMessage
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.contrib.auth import login
-from django.contrib.sites.shortcuts import get_current_site
-from django.utils.encoding import force_bytes, force_text
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
-from django.contrib.auth.models import User
-from django.contrib.auth import logout
-from django.core.mail import EmailMessage
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
 from .forms import SignUpForm
 from .tokens import account_activation_token
@@ -29,7 +28,6 @@ def register(request):
                 'token': account_activation_token.make_token(user),
             })
             to_email = form.cleaned_data.get('email')
-            print(to_email)
             email = EmailMessage(
                 mail_subject, message, to=[to_email]
             )
