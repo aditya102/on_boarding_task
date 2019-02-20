@@ -60,7 +60,12 @@ class LoginView (TestCase):
         """
         Check for invalid username and invalid password should not be able to login
         """
-        response = self.client.post(reverse('login'), {'username': self.create_fake_data()['username'], 'password': self.create_fake_data()['password1']})
+        response = self.client.post(
+            reverse('login'), {
+                'username': self.create_fake_data()['username'],
+                'password': self.create_fake_data()['password1']
+            }
+        )
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'form', None, ERROR_MSG)
 
@@ -76,7 +81,7 @@ class LoginView (TestCase):
         """
         Check for invalid username and valid password should not be able to login
         """
-        response = self.client.post(reverse('login'), {'username': 'xyzabe', 'password':self.user['password1']})
+        response = self.client.post(reverse('login'), {'username': 'xyzabe', 'password': self.user['password1']})
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'form', None, ERROR_MSG)
 
@@ -106,6 +111,6 @@ class LoginView (TestCase):
         """
         old_password = self.user['password1']
         self.change_password()
-        response = self.client.post(reverse('login'), {'username': self.user['username'], 'password':old_password})
+        response = self.client.post(reverse('login'), {'username': self.user['username'], 'password': old_password})
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'form', None, ERROR_MSG)

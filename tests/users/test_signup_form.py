@@ -36,7 +36,7 @@ class SignupTest(TestCase):
             'last_name': self.user['last_name'],
             'email': self.user['email'],
             'password1': self.user['password1'],
-            'password2': fake.password(),
+            'password2': self.user['password2'],
         })
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'form', 'password2', "The two password fields didn't match.")
@@ -47,8 +47,6 @@ class SignupTest(TestCase):
         """
         form = SignUpForm(data=self.user)
         self.assertTrue(form.is_valid())
-
-
 
     def tests_for_account_already_exist(self):
         """

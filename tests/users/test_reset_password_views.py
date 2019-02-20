@@ -34,7 +34,7 @@ class PasswordReset(TestCase):
         """
         temp_form = SignUpForm(data=self.user)
         temp_form.save()
-        response = response = self.client.post(reverse('password_reset'), {'email': fake.email()})
+        response = response = self.client.post(reverse('password_reset'), {'email': self.create_fake_data()['email']})
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'form', 'email', "No Account with this email Address")
 
@@ -48,7 +48,7 @@ class PasswordReset(TestCase):
     def test_email_sent_successfully(self):
 
         """
-         Proper email reset msg should be sent to the email address with correct subject.
+        Proper email reset msg should be sent to the email address with correct subject.
         """
 
         user = User.objects.create_user(
