@@ -13,7 +13,6 @@ password = fake.password()
 
 
 class PasswordReset(TestCase):
-    
     def setUp(self):
         self.user_data = {
             'username': fake.user_name(),
@@ -33,8 +32,6 @@ class PasswordReset(TestCase):
         response = response = self.client.post(reverse('password_reset'), {'email': fake.email()})
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'form', 'email', "No Account with this email Address")
-
-class EmailReset(TestCase):
 
     def test_no_email_sent(self):
         """
@@ -59,23 +56,71 @@ class EmailReset(TestCase):
         self.assertEqual(mail.outbox[0].subject, 'Password reset on testserver')
         self.assertEqual(mail.outbox[0].from_email, 'webmaster@localhost')
 
-# class VerificationTokenCheck(TestCase):
+class VerificationTokenCheck(TestCase):
 
-#     def test_reseting(self):
-#         """
-#         Checks that verification token should not be used more than once and User should get proper error while using 
-#         invalid token.
-#         """
-#         email = fake.email()
-#         User.objects.create_user(
-#             first_name=fake.first_name(), last_name=fake.last_name(), username=fake.user_name(),
-#             email=email, password="", is_active=True).save()
-#         response = self.client.post(reverse('password_reset'), {email: email})
-#         self.client.get(
-#             reverse('reset_password/confirm/'), kwargs={'uidb64': response.context['uid'], 
-#             'token': response.context['token']}, follow=True
-#         )
+    def test_reset_password_using_verification_link(self):
 
+        '''
+        Test Case for checking user is able to reset the password or not if verification token is correct.
+        '''
 
+        user = User.objects.create_user(
+            username=fake.user_name(), email='testuser123@testing.com', password=password
+        )
+        user.save()
+        response = self.client.post(reverse("password_reset"), {'email': 'testuser123@testing.com'})
+        forgot_page = self.client.get(reverse(
+            'password_reset_confirm',
+            kwargs={
+                'uidb64': response.context['uid'],
+                'token': response.context['token']
+            }),
+            follow=True
+        )
+        forgot = self.client.post(
+            forgot_page.redirect_chain[0][0],
+            {
+                'new_password1': 'Demo@123',
+                'new_password2': 'Demo@123'
+            }
+        )
+        self.assertRedirects(forgot, reverse('password_reset_complete'))
 
+    def test_invalid_verification_link(self):
 
+        '''
+        Test Case to make sure that user should not be able to use link more than once.
+        '''
+        user = User.objects.create_user(
+            username=fake.user_name(), email='testuser123@testing.com', password=password
+        )
+        user.save()
+        response = self.client.post(reverse("password_reset"), {'email': 'testuser123@testing.com'})
+        forgot_page = self.client.get(reverse(
+            'password_reset_confirm',
+            kwargs={
+                'uidb64': response.context['uid'],
+                'token': response.context['token']
+            }), follow=True
+        )
+        forgot = self.client.post(
+            forgot_page.redirect_chain[0][0],
+            {'new_password1': 'Demo@123', 'new_password2': 'Demo@123'}
+        )
+        self.assertRedirects(forgot, reverse('password_reset_complete'))
+        # Password changed successfully.
+        reset_password_again = self.client.get(reverse(
+            'password_reset_confirm',
+            kwargs={
+                'uidb64': response.context['uid'],
+                'token': response.context['token']
+            }), follow=True
+        )
+        forgot_again = self.client.post(
+            forgot_page.redirect_chain[0][0],
+            {
+                'new_password1': 'Demo@123',
+                'new_password2': 'Demo@123'
+            }
+        )
+        self.assertContains(forgot_again, ' The password reset link is invalid because it\'s already visited')

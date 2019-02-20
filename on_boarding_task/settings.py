@@ -24,10 +24,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'i&!g*w+trwdp+h$k6*ty6)bi$p%(70*yri9c0rrc223s#kqn7%'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', cast=bool)
+EMAIL_PORT = config('EMAIL_PORT', cast=int)
 
-ALLOWED_HOSTS = ['testserver','localhost']
+ALLOWED_HOSTS = ['testserver', 'localhost']
 
 
 # Application definition
@@ -135,5 +135,4 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'imap.gmail.com'
 EMAIL_HOST_USER = 'xda.aditya@gmail.com'
-EMAIL_HOST_PASSWORD = 'aditya@gmailtcs'
-EMAIL_PORT = 587
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')

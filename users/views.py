@@ -50,7 +50,12 @@ def activate(request, uidb64, token):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
-    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist): 
+        '''
+        force_text accepts string as a argument if decoder gives something
+        else it will raise Type Error and Value Error
+        OverflowError will Occcur when uid value is be too large .
+        '''
         user = None
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True

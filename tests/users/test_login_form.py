@@ -1,13 +1,15 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
+from faker import Faker
 
 ERROR_MSG = 'Please enter a correct username and password. Note that both fields may be case-sensitive.'
-
+fake = Faker()
+password = fake.password()
 
 class LoginView (TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username='demo_user', password='demo@123')
+        self.user = User.objects.create_user(username=fake.user_name(), password=password)
 
     def change_password(self):
         """
@@ -32,7 +34,7 @@ class LoginView (TestCase):
         Check login page is redirected to home page or not .
         """
         response = self.client.post(
-            reverse('login'), {'username': self.user.username, 'password': 'demo@123'}, follow=True
+            reverse('login'), {'username': self.user.username, 'password': password}, follow=True
         )
         self.assertRedirects(response, reverse('home'))
 

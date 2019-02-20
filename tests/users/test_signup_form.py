@@ -10,7 +10,6 @@ password = fake.password()
 
 
 class Signup(TestCase):
-
     def setUp(self):
         self.user_data = {
             'username': fake.user_name(),
