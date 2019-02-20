@@ -5,6 +5,8 @@
 .vscode
 setup.cfg
 .env
+.idea
+editor.cfg
 
 ### Django ###
 *.log

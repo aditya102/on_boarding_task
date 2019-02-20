@@ -1,7 +1,8 @@
+from faker import Faker
+
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
-from faker import Faker
 
 ERROR_MSG = 'Please enter a correct username and password. Note that both fields may be case-sensitive.'
 fake = Faker()
@@ -73,7 +74,7 @@ class LoginView (TestCase):
 
     def test_login_after_password_change(self):
         """
-        Check for changin password users should be able to login
+        Check for changing password users should be able to login
         """
         self.change_password()
         response = self.client.post(
