@@ -1,23 +1,40 @@
 from faker import Faker
+from exam import fixture
 
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
 ERROR_MSG = 'Please enter a correct username and password. Note that both fields may be case-sensitive.'
-fake = Faker()
-password = fake.password()
 
 class LoginView (TestCase):
+
+    def create_fake_data(self):
+        fake = Faker()
+        base_password = fake.password()
+        user_data = {
+            'username': fake.user_name(),
+            'first_name': fake.name(),
+            'last_name': fake.last_name(),
+            'email': fake.email(),
+            'password1': base_password,
+            'password2': base_password,
+        }
+        return user_data
+
+    @fixture
+    def user(self):
+        return self.create_fake_data()
+
     def setUp(self):
-        self.user = User.objects.create_user(username=fake.user_name(), password=password)
+        self.test_user = User.objects.create_user(username=self.user['username'], password=self.user['password1'])
 
     def change_password(self):
         """
         Helper method for changing password.
         """
-        self.user.set_password('@new_demo_passowrd')
-        self.user.save()
+        self.test_user.set_password(self.create_fake_data()['password1'])
+        self.test_user.save()
 
     def test_login_page_elements(self):
         """
@@ -35,7 +52,7 @@ class LoginView (TestCase):
         Check login page is redirected to home page or not .
         """
         response = self.client.post(
-            reverse('login'), {'username': self.user.username, 'password': password}, follow=True
+            reverse('login'), {'username': self.user['username'], 'password': self.user['password1']}, follow=True
         )
         self.assertRedirects(response, reverse('home'))
 
@@ -43,7 +60,7 @@ class LoginView (TestCase):
         """
         Check for invalid username and invalid password should not be able to login
         """
-        response = self.client.post(reverse('login'), {'username': 'adafafaf', 'password': 'wrong@passowrd'})
+        response = self.client.post(reverse('login'), {'username': self.create_fake_data()['username'], 'password': self.create_fake_data()['password1']})
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'form', None, ERROR_MSG)
 
@@ -51,7 +68,7 @@ class LoginView (TestCase):
         """
         Check for valid username and invalid password should not be able to login
         """
-        response = self.client.post(reverse('login'), {'username': self.user.username, 'password': '1sfsdf'})
+        response = self.client.post(reverse('login'), {'username': self.user['username'], 'password': '1sfsdf'})
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'form', None, ERROR_MSG)
 
@@ -59,7 +76,7 @@ class LoginView (TestCase):
         """
         Check for invalid username and valid password should not be able to login
         """
-        response = self.client.post(reverse('login'), {'username': 'xyzabe', 'password': 'demo@123'})
+        response = self.client.post(reverse('login'), {'username': 'xyzabe', 'password':self.user['password1']})
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'form', None, ERROR_MSG)
 
@@ -74,11 +91,12 @@ class LoginView (TestCase):
 
     def test_login_after_password_change(self):
         """
-        Check for changing password users should be able to login
+        Check for After changing password users should be able to login
         """
+        old_password = self.user['password1']
         self.change_password()
         response = self.client.post(
-            reverse('login'), {'username': self.user.username, 'password': '@new_demo_password'}
+            reverse('login'), {'username': self.user['username'], 'password': old_password}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -86,7 +104,8 @@ class LoginView (TestCase):
         """
         Check for users should not be able to login from old password
         """
+        old_password = self.user['password1']
         self.change_password()
-        response = self.client.post(reverse('login'), {'username': 'self.user.username', 'password': 'demo@123'})
+        response = self.client.post(reverse('login'), {'username': self.user['username'], 'password':old_password})
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'form', None, ERROR_MSG)

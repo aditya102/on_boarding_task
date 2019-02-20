@@ -9,12 +9,10 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from users.forms import SignUpForm
 
-fake = Faker()
-password = fake.password()
-
 
 class PasswordReset(TestCase):
     def create_fake_data(self):
+        fake = Faker()
         base_password = fake.password()
         user_data = {
             'username': fake.user_name(),

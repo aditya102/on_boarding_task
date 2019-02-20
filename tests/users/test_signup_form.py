@@ -6,12 +6,11 @@ from django.test import TestCase
 from django.urls import reverse
 from users.forms import SignUpForm
 
-fake = Faker()
-
 
 class SignupTest(TestCase):
 
     def create_fake_data(self):
+        fake = Faker()
         base_password = fake.password()
         user_data = {
             'username': fake.user_name(),
