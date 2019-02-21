@@ -134,5 +134,5 @@ LOGOUT_REDIRECT_URL = '/users/login'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'imap.gmail.com'
-EMAIL_HOST_USER = 'xda.aditya@gmail.com'
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
