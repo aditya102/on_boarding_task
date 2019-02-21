@@ -7,26 +7,11 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
+
 from users.forms import SignUpForm
+from users.mixin import UserMixin
 
-
-class PasswordReset(TestCase):
-    def create_user_data(self):
-        fake = Faker()
-        base_password = fake.password()
-        user_data = {
-            'username': fake.user_name(),
-            'first_name': fake.name(),
-            'last_name': fake.last_name(),
-            'email': fake.email(),
-            'password1': base_password,
-            'password2': base_password,
-        }
-        return user_data
-
-    @fixture
-    def user(self):
-        return self.create_user_data()
+class PasswordReset(UserMixin, TestCase):
 
     def test_for_valid_email(self):
         """
@@ -35,7 +20,8 @@ class PasswordReset(TestCase):
         temp_form = SignUpForm(data=self.user)
         temp_form.save()
         response = response = self.client.post(reverse(
-            'password_reset'), {
+            'password_reset'),
+            {
                 'email': self.create_user_data().get('email')
             }
         )
@@ -114,11 +100,11 @@ class PasswordReset(TestCase):
                 'token': response.context['token']
             }), follow=True
         )
-        forgot_again = self.client.post(
+        forgot_page_response = self.client.post(
             forgot_page.redirect_chain[0][0],
             {
                 'new_password1': 'Demo@123',
                 'new_password2': 'Demo@123'
             }
         )
-        self.assertContains(forgot_again, ' The password reset link is invalid because it\'s already visited')
+        self.assertContains(forgot_page_response, ' The password reset link is invalid because it\'s already visited')

@@ -4,27 +4,12 @@ from faker import Faker
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
+
 from users.forms import SignUpForm
+from users.mixin import UserMixin
 
 
-class SignupTest(TestCase):
-
-    def create_user_data(self):
-        fake = Faker()
-        base_password = fake.password()
-        user_data = {
-            'username': fake.user_name(),
-            'first_name': fake.name(),
-            'last_name': fake.last_name(),
-            'email': fake.email(),
-            'password1': base_password,
-            'password2': base_password,
-        }
-        return user_data
-
-    @fixture
-    def user(self):
-        return self.create_user_data()
+class SignupTest(UserMixin, TestCase):
 
     def test_for_the_both_password_field_match(self):
         """

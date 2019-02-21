@@ -5,26 +5,11 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
+from users.mixin import UserMixin
+
 ERROR_MSG = 'Please enter a correct username and password. Note that both fields may be case-sensitive.'
 
-class LoginView (TestCase):
-
-    def create_user_data(self):
-        fake = Faker()
-        password = fake.password()
-        user_data = {
-            'username': fake.user_name(),
-            'first_name': fake.name(),
-            'last_name': fake.last_name(),
-            'email': fake.email(),
-            'password1': password,
-            'password2': password,
-        }
-        return user_data
-
-    @fixture
-    def user(self):
-        return self.create_user_data()
+class LoginView (UserMixin, TestCase):
 
     def setUp(self):
         self.test_user = User.objects.create_user(username=self.user['username'], password=self.user['password1'])
