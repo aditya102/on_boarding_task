@@ -13,11 +13,9 @@ class SignUpForm(UserCreationForm):
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
 
     def clean_email(self):
-        """
-        ensure that email is always lower case.
-        """
-        return self.cleaned_data['email'].lower()
-
+        if User.objects.filter(email__iexact=self.cleaned_data['email']):
+            raise forms.ValidationError((u'This email address is already in use. Try another'))
+        return self.cleaned_data['email']
 
 class CustomPasswordReset(PasswordResetForm):
     def clean(self):

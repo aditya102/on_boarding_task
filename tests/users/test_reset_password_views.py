@@ -30,7 +30,7 @@ class PasswordReset(UserMixin, TestCase):
 
     def test_email_success(self):
         '''
-        Proper email reset msg should be sent to the email address with correct subject.
+        Proper email reset message should be sent to the email address with correct subject.
         '''
 
         user = User.objects.create_user(
@@ -80,7 +80,7 @@ class PasswordReset(UserMixin, TestCase):
         )
         user.save()
         response = self.client.post(reverse("password_reset"), {'email': user.email})
-        forgot_page = self.client.get(reverse(
+        forgot_page_response = self.client.get(reverse(
             'password_reset_confirm',
             kwargs={
                 'uidb64': response.context['uid'],
@@ -88,20 +88,12 @@ class PasswordReset(UserMixin, TestCase):
             }), follow=True
         )
         forgot = self.client.post(
-            forgot_page.redirect_chain[0][0],
+            forgot_page_response.redirect_chain[0][0],
             {'new_password1': 'Demo@123', 'new_password2': 'Demo@123'}
         )
         self.assertRedirects(forgot, reverse('password_reset_complete'))
-        # Password changed successfully.
-        reset_password_again = self.client.get(reverse(
-            'password_reset_confirm',
-            kwargs={
-                'uidb64': response.context['uid'],
-                'token': response.context['token']
-            }), follow=True
-        )
         forgot_page_response = self.client.post(
-            forgot_page.redirect_chain[0][0],
+            forgot_page_response.redirect_chain[0][0],
             {
                 'new_password1': 'Demo@123',
                 'new_password2': 'Demo@123'
