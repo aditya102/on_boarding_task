@@ -4,6 +4,11 @@
 
 .vscode
 setup.cfg
+.env
+.idea
+editor.cfg
+Pipfile
+pipfile.lock
 
 ### Django ###
 *.log
