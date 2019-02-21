@@ -9,22 +9,22 @@ ERROR_MSG = 'Please enter a correct username and password. Note that both fields
 
 class LoginView (TestCase):
 
-    def create_fake_data(self):
+    def create_user_data(self):
         fake = Faker()
-        base_password = fake.password()
+        password = fake.password()
         user_data = {
             'username': fake.user_name(),
             'first_name': fake.name(),
             'last_name': fake.last_name(),
             'email': fake.email(),
-            'password1': base_password,
-            'password2': base_password,
+            'password1': password,
+            'password2': password,
         }
         return user_data
 
     @fixture
     def user(self):
-        return self.create_fake_data()
+        return self.create_user_data()
 
     def setUp(self):
         self.test_user = User.objects.create_user(username=self.user['username'], password=self.user['password1'])
@@ -33,7 +33,7 @@ class LoginView (TestCase):
         """
         Helper method for changing password.
         """
-        self.test_user.set_password(self.create_fake_data()['password1'])
+        self.test_user.set_password(self.create_user_data()['password1'])
         self.test_user.save()
 
     def test_login_page_elements(self):
@@ -62,8 +62,8 @@ class LoginView (TestCase):
         """
         response = self.client.post(
             reverse('login'), {
-                'username': self.create_fake_data()['username'],
-                'password': self.create_fake_data()['password1']
+                'username': self.create_user_data()['username'],
+                'password': self.create_user_data()['password1']
             }
         )
         self.assertEqual(response.status_code, 200)

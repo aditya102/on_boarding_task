@@ -9,7 +9,7 @@ from users.forms import SignUpForm
 
 class SignupTest(TestCase):
 
-    def create_fake_data(self):
+    def create_user_data(self):
         fake = Faker()
         base_password = fake.password()
         user_data = {
@@ -24,7 +24,7 @@ class SignupTest(TestCase):
 
     @fixture
     def user(self):
-        return self.create_fake_data()
+        return self.create_user_data()
 
     def test_for_the_both_password_field_match(self):
         """
@@ -36,7 +36,7 @@ class SignupTest(TestCase):
             'last_name': self.user['last_name'],
             'email': self.user['email'],
             'password1': self.user['password1'],
-            'password2': self.user['password2'],
+            'password2': self.create_user_data()['password2'],
         })
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'form', 'password2', "The two password fields didn't match.")

@@ -11,7 +11,7 @@ from users.forms import SignUpForm
 
 
 class PasswordReset(TestCase):
-    def create_fake_data(self):
+    def create_user_data(self):
         fake = Faker()
         base_password = fake.password()
         user_data = {
@@ -26,30 +26,26 @@ class PasswordReset(TestCase):
 
     @fixture
     def user(self):
-        return self.create_fake_data()
+        return self.create_user_data()
 
-    def test_for_valid_email_address_reset(self):
+    def test_for_valid_email(self):
         """
         Checks that password reset request accepts only valid emails whose account is already present on database.
         """
         temp_form = SignUpForm(data=self.user)
         temp_form.save()
-        response = response = self.client.post(reverse('password_reset'), {'email': self.create_fake_data()['email']})
+        response = response = self.client.post(reverse(
+            'password_reset'), {
+                'email': self.create_user_data().get('email')
+            }
+        )
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'form', 'email', "No Account with this email Address")
 
-    def test_no_email_sent(self):
-        """
-        Check that no email should be sent without an email address
-        """
-        self.response = self.client.post(reverse('password_reset'))
-        self.assertEqual(len(mail.outbox), 0)
-
-    def test_email_sent_successfully(self):
-
-        """
+    def test_email_success(self):
+        '''
         Proper email reset msg should be sent to the email address with correct subject.
-        """
+        '''
 
         user = User.objects.create_user(
             username=self.user['username'], email=self.user['email'], password=self.user['password1']
@@ -57,22 +53,21 @@ class PasswordReset(TestCase):
         user.save()
         self.response = self.client.post(reverse('password_reset'), {'email': user.email})
         self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(*mail.outbox[0].to, user.email)
+        self.assertTrue(user.email in user.email in mail.outbox[0].to)
         self.assertEqual(mail.outbox[0].subject, 'Password reset on testserver')
         self.assertEqual(mail.outbox[0].from_email, 'webmaster@localhost')
 
     def test_reset_password_using_verification_link(self):
-
         '''
         Test Case for checking user is able to reset the password or not if verification token is correct.
         '''
 
-        user1 = User.objects.create_user(
+        user = User.objects.create_user(
             username=self.user['username'], email=self.user['email'], password=self.user['password1']
         )
-        user1.save()
+        user.save()
         response = self.client.post(reverse("password_reset"), {'email': self.user['email']})
-        forgot_page = self.client.get(reverse(
+        forgot_page = self.client.post(reverse(
             'password_reset_confirm',
             kwargs={
                 'uidb64': response.context['uid'],
@@ -89,16 +84,16 @@ class PasswordReset(TestCase):
         )
         self.assertRedirects(forgot, reverse('password_reset_complete'))
 
-    def test_invalid_verification_link(self):
+    def test_invalid_link(self):
 
         '''
         Test Case to make sure that user should not be able to use link more than once.
         '''
-        user1 = User.objects.create_user(
+        user = User.objects.create_user(
             username=self.user['username'], email=self.user['email'], password=self.user['password1']
         )
-        user1.save()
-        response = self.client.post(reverse("password_reset"), {'email': self.user['email']})
+        user.save()
+        response = self.client.post(reverse("password_reset"), {'email': user.email})
         forgot_page = self.client.get(reverse(
             'password_reset_confirm',
             kwargs={
