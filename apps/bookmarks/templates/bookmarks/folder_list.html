@@ -1,0 +1,15 @@
+{% extends 'bookmarks/base.html' %}
+{% load static %}
+{% block main %}
+    {% for folder in folders %}
+      <div class="row">
+        <div class="card" style="width: 10rem; margin:20px">
+          <img src="{% static "bookmarks/images/folder.jpg" %}" alt="My image" class="card-img-top">
+          <div class="card-body">
+          <h5 class="card-title">{{folder.name}}</h5>
+          <p class="card-text">{{folder.created_by}}</p>
+          <a href="#" class="btn btn-primary">Open</a>
+        </div>
+      </div>
+    {% endfor %}
+{% endblock  %}
