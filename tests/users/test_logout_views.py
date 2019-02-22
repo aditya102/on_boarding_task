@@ -12,5 +12,5 @@ class LogOutView(TestCase):
         Check after logout page redirects or not.
         """
         self.client.login(username=self.user.username, password='demo@123')
-        response = self.client.get(reverse('logout'), follow=True)
-        self.assertRedirects(response, reverse('login'))
+        response = self.client.get(reverse('users:logout'), follow=True)
+        self.assertRedirects(response, reverse('users:login'))

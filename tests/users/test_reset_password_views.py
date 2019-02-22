@@ -8,8 +8,8 @@ from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
-from users.forms import SignUpForm
-from users.mixin import UserMixin
+from apps.users.forms import SignUpForm
+from apps.users.mixin import UserMixin
 
 class PasswordReset(UserMixin, TestCase):
 
@@ -37,7 +37,7 @@ class PasswordReset(UserMixin, TestCase):
             username=self.user['username'], email=self.user['email'], password=self.user['password1']
         )
         user.save()
-        self.response = self.client.post(reverse('password_reset'), {'email': user.email})
+        self.response = self.client.post(reverse('users:password_reset'), {'email': user.email})
         self.assertEqual(len(mail.outbox), 1)
         self.assertTrue(user.email in user.email in mail.outbox[0].to)
         self.assertEqual(mail.outbox[0].subject, 'Password reset on testserver')
@@ -52,9 +52,9 @@ class PasswordReset(UserMixin, TestCase):
             username=self.user['username'], email=self.user['email'], password=self.user['password1']
         )
         user.save()
-        response = self.client.post(reverse("password_reset"), {'email': self.user['email']})
+        response = self.client.post(reverse("users:password_reset"), {'email': self.user['email']})
         forgot_page = self.client.post(reverse(
-            'password_reset_confirm',
+            'users:password_reset_confirm',
             kwargs={
                 'uidb64': response.context['uid'],
                 'token': response.context['token']
@@ -68,7 +68,7 @@ class PasswordReset(UserMixin, TestCase):
                 'new_password2': 'Demo@123'
             }
         )
-        self.assertRedirects(forgot, reverse('password_reset_complete'))
+        self.assertRedirects(forgot, reverse('users:password_reset_complete'))
 
     def test_invalid_link(self):
 
@@ -79,9 +79,9 @@ class PasswordReset(UserMixin, TestCase):
             username=self.user['username'], email=self.user['email'], password=self.user['password1']
         )
         user.save()
-        response = self.client.post(reverse("password_reset"), {'email': user.email})
+        response = self.client.post(reverse("users:password_reset"), {'email': user.email})
         forgot_page_response = self.client.get(reverse(
-            'password_reset_confirm',
+            'users:password_reset_confirm',
             kwargs={
                 'uidb64': response.context['uid'],
                 'token': response.context['token']
@@ -91,7 +91,7 @@ class PasswordReset(UserMixin, TestCase):
             forgot_page_response.redirect_chain[0][0],
             {'new_password1': 'Demo@123', 'new_password2': 'Demo@123'}
         )
-        self.assertRedirects(forgot, reverse('password_reset_complete'))
+        self.assertRedirects(forgot, reverse('users:password_reset_complete'))
         forgot_page_response = self.client.post(
             forgot_page_response.redirect_chain[0][0],
             {

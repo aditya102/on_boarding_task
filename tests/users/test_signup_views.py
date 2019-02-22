@@ -10,7 +10,7 @@ class Signup(TestCase):
         """
         Test whether all the elements in the signup view is loading properly or not loding.
         """
-        response = self.client.get(reverse('register'))
+        response = self.client.get(reverse('users:register'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'users/register.html')
         self.assertContains(response, '<input type="text" name="username" ')

@@ -10,12 +10,12 @@
         </fieldset>
           <div class="form-group">
             <button class="btn btn-outline-info" type="submit">Log In</button>
-            Forgot Password <a class="ml-2" href="{% url 'password_reset' %}">Reset Password</a>
+            Forgot Password <a class="ml-2" href="{% url 'users:password_reset' %}">Reset Password</a>
           </div>
     </form>
     <div class="border-top pt-3">
       <small class="text-muted">
-        Need An Account? <a class="ml-2" href="{% url 'register' %}">Sign Up Now</a>
+        Need An Account? <a class="ml-2" href="{% url 'users:register' %}">Sign Up Now</a>
       </small>
     </div>
   </div>

@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
-from users.mixin import UserMixin
+from apps.users.mixin import UserMixin
 
 ERROR_MSG = 'Please enter a correct username and password. Note that both fields may be case-sensitive.'
 
@@ -25,7 +25,7 @@ class LoginView (UserMixin, TestCase):
         """
         Test the login page elements like button, username field and password field is loded properly or not.
         """
-        response = self.client.get(reverse('login'))
+        response = self.client.get(reverse('users:login'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'users/login.html')
         self.assertContains(response, ' <input type="text" name="username"')
@@ -37,16 +37,16 @@ class LoginView (UserMixin, TestCase):
         Check login page is redirected to home page or not .
         """
         response = self.client.post(
-            reverse('login'), {'username': self.user['username'], 'password': self.user['password1']}, follow=True
+            reverse('users:login'), {'username': self.user['username'], 'password': self.user['password1']}, follow=True
         )
-        self.assertRedirects(response, reverse('home'))
+        self.assertRedirects(response, reverse('users:home'))
 
     def test_invalid_username_invalid_password(self):
         """
         Check for invalid username and invalid password should not be able to login
         """
         response = self.client.post(
-            reverse('login'), {
+            reverse('users:login'), {
                 'username': self.create_user_data()['username'],
                 'password': self.create_user_data()['password1']
             }
@@ -58,7 +58,7 @@ class LoginView (UserMixin, TestCase):
         """
         Check for valid username and invalid password should not be able to login
         """
-        response = self.client.post(reverse('login'), {'username': self.user['username'], 'password': '1sfsdf'})
+        response = self.client.post(reverse('users:login'), {'username': self.user['username'], 'password': '1sfsdf'})
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'form', None, ERROR_MSG)
 
@@ -66,7 +66,7 @@ class LoginView (UserMixin, TestCase):
         """
         Check for invalid username and valid password should not be able to login
         """
-        response = self.client.post(reverse('login'), {'username': 'xyzabe', 'password': self.user['password1']})
+        response = self.client.post(reverse('users:login'), {'username': 'xyzabe', 'password': self.user['password1']})
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'form', None, ERROR_MSG)
 
@@ -74,7 +74,7 @@ class LoginView (UserMixin, TestCase):
         """
         Check for blank username and blank password should not be able to login
         """
-        response = self.client.post(reverse('login'), {'username': '', 'password': ''})
+        response = self.client.post(reverse('users:login'), {'username': '', 'password': ''})
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'form', 'username', 'This field is required.')
         self.assertFormError(response, 'form', 'password', 'This field is required.')
@@ -86,7 +86,7 @@ class LoginView (UserMixin, TestCase):
         old_password = self.user['password1']
         self.change_password()
         response = self.client.post(
-            reverse('login'), {'username': self.user['username'], 'password': old_password}
+            reverse('users:login'), {'username': self.user['username'], 'password': old_password}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -96,6 +96,6 @@ class LoginView (UserMixin, TestCase):
         """
         old_password = self.user['password1']
         self.change_password()
-        response = self.client.post(reverse('login'), {'username': self.user['username'], 'password': old_password})
+        response = self.client.post(reverse('users:login'), {'username': self.user['username'], 'password': old_password})
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'form', None, ERROR_MSG)

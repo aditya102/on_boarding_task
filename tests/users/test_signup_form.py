@@ -5,8 +5,8 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
-from users.forms import SignUpForm
-from users.mixin import UserMixin
+from apps.users.forms import SignUpForm
+from apps.users.mixin import UserMixin
 
 
 class SignupTest(UserMixin, TestCase):
@@ -15,7 +15,7 @@ class SignupTest(UserMixin, TestCase):
         """
         Test password and confirm password field have same password or not.
         """
-        response = self.client.post(reverse('register'), {
+        response = self.client.post(reverse('users:register'), {
             'username': self.user['username'],
             'first_name': self.user['first_name'],
             'last_name': self.user['last_name'],
