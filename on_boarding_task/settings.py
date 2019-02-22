@@ -33,7 +33,7 @@ ALLOWED_HOSTS = ['testserver', 'localhost']
 INSTALLED_APPS = [
     'apps.users',
     'apps.bookmarks',
-    'django.contrib.admin',
+   'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -121,6 +121,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+AUTH_USER_MODEL = 'users.User'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
