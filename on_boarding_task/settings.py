@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['testserver', 'localhost']
 
 INSTALLED_APPS = [
     'apps.users',
+    'apps.bookmarks',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
