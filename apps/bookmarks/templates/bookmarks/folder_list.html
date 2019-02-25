@@ -8,7 +8,7 @@
           <div class="card-body">
           <h5 class="card-title">{{folder.name}}</h5>
           <p class="card-text">{{folder.created_by}}</p>
-          <a href="#" class="btn btn-primary">Open</a>
+          <a href="{{ folder.id }}" class="btn btn-primary">Open</a>
         </div>
       </div>
     {% endfor %}

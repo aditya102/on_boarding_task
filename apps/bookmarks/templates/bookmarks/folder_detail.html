@@ -1,0 +1,17 @@
+{% extends 'bookmarks/base.html' %}
+{% block main %}
+
+    {% with bookmarks.all|first as bookmark %}
+            <a class="link" href="{% url 'bookmarks:bookmark_create' folder_id=bookmark.folder.id %}"> Create Bookmark </a>
+    {% endwith %}
+
+    {% for bookmark in bookmarks %}
+        <div class='row'>
+            <div class="card" style="width: 10rem; margin:20px" >
+                <h5>Name :- {{ bookmark.name }}</h5>
+                <a href="{{bookmark.url}}">{{bookmark.url}}</a>
+                <br>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock  %}

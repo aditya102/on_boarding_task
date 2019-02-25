@@ -4,7 +4,7 @@
         <div class="jumbotron text-center">
 
         <h3>Welcome to on boarding App</h3>
-        <a href ="#"> Bookmark apps </a>
+        <a href ="{% url 'bookmarks:folders_list' %}"> Bookmark apps </a>
         </div>
         <p><a href="{% url 'users:logout' %}">logout</a></p>
   {% else %}
