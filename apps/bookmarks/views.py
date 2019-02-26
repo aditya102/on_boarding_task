@@ -27,6 +27,7 @@ class BookmarkListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         folder = Folder.objects.filter(created_by=self.request.user).get(pk=self.kwargs['folder_id'])
         context["bookmarks"] = folder.bookmark_set.all()
+        context["folder_id"] = folder.id
         return context
 
 
@@ -53,11 +54,6 @@ class BookmarkCreateView(LoginRequiredMixin, CreateView):
         kwargs.update({'user': self.request.user})
         kwargs.update({'folder': self.kwargs['folder_id']})
         return kwargs
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data()
-        data['selected_folder'] = self.kwargs['folder_id']
-        return data
 
     def get_success_url(self):
         url = reverse('bookmarks:folders_list')

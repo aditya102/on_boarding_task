@@ -1,6 +1,9 @@
 {% extends 'bookmarks/base.html' %}
 {% load crispy_forms_tags %}
 {% block main %}
+
+    {{selected_folder}}
+
     <form method="post">{% csrf_token %}
     {{ form | crispy }}
     <input type="submit" value="Create Bookmarks">
