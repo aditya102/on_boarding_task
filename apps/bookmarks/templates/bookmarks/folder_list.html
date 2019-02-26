@@ -8,7 +8,9 @@
           <div class="card-body">
           <h5 class="card-title">{{folder.name}}</h5>
           <p class="card-text">{{folder.created_by}}</p>
+          <p> count :- {{ folder.bookmark_set.count }} </p>
           <a href="{{ folder.id }}" class="btn btn-primary">Open</a>
+          <a href="{% url 'bookmarks:folder_delete' folder_id=folder.id %}"> Delete </a>
         </div>
       </div>
     {% endfor %}
