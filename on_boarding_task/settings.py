@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+from decouple import config
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -22,8 +24,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'i&!g*w+trwdp+h$k6*ty6)bi$p%(70*yri9c0rrc223s#kqn7%'
 
-DEBUG = True
-EMAIL_PORT = 587
+DEBUG = config('DEBUG', cast=bool)
+EMAIL_PORT = config('EMAIL_PORT', cast=int)
 
 ALLOWED_HOSTS = ['testserver', 'localhost']
 
@@ -40,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -135,5 +138,5 @@ LOGOUT_REDIRECT_URL = '/users/login'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'imap.gmail.com'
-EMAIL_HOST_USER = 'xda.aditya@gmail.com'
-EMAIL_HOST_PASSWORD = 'aditya@gmailtcs'
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
